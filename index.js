@@ -1,11 +1,11 @@
-import * as THREE from './node_modules/three/build/three.module.js';
-import './node_modules/facefilter/dist/jeelizFaceFilterES6.js';
+import * as THREE from '../three/build/three.module.js';
+import '../facefilter/dist/jeelizFaceFilterES6.js';
 import {
     OBJLoader
-} from './node_modules/three/examples/jsm/loaders/OBJLoader.js';
+} from '../three/examples/jsm/loaders/OBJLoader.js';
 
 const labsfilter = (function () {
-    let NNCprefix = './node_modules/facefilter/dist/';
+    let NNCprefix = '../node_modules/facefilter/dist/';
     let NNCpath = NNCprefix + 'NNC.json';
     let video;
     let canvasID;
