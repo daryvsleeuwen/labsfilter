@@ -1,0 +1,28 @@
+{
+  "name": "labsfilter",
+  "version": "1.0.1",
+  "description": "Library voor 3D gezichtsfilters",
+  "main": "index.js",
+  "dependencies": {
+    "facefilter": "^1.2.7",
+    "three": "^0.117.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daryvsleeuwen/labsfilter.git"
+  },
+  "keywords": [
+    "3D",
+    "gezichtsfilter"
+  ],
+  "author": "Dary van Sleeuwen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daryvsleeuwen/labsfilter/issues"
+  },
+  "homepage": "https://github.com/daryvsleeuwen/labsfilter#readme"
+}

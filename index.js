@@ -5,7 +5,7 @@ import {
 } from '../three/examples/jsm/loaders/OBJLoader.js';
 
 const labsfilter = (function () {
-    let NNCprefix = '../node_modules/facefilter/dist/';
+    let NNCprefix = 'node_modules/facefilter/dist/';
     let NNCpath = NNCprefix + 'NNC.json';
     let video;
     let canvasID;
@@ -90,7 +90,7 @@ const labsfilter = (function () {
                     } else {
                         let s = detectState.s;
                         filtermodel.position.x = detectState.x;
-                        filtermodel.position.y = detectState.y - 0.2;
+                        filtermodel.position.y = detectState.y - 0.4;
     
                         filtermodel.scale.set(s * scalefactor, s * scalefactor, s * scalefactor);
     
