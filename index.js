@@ -8,12 +8,13 @@ const labsfilter = (function () {
     let NNCprefix = 'node_modules/facefilter/dist/';
     let NNCpath = NNCprefix + 'NNC.json';
     let video;
-    let canvasID;
+    let canvas;
     let objectloader = new OBJLoader();
     let textureloader = new THREE.TextureLoader();
-    let w;
-    let h;
-    let scalefactor = 0.13;
+    let width;
+    let height;
+    let rect;
+    let scalefactor = 0.185;
     let filtermodel;
     let renderer;
     let scene;
@@ -22,7 +23,7 @@ const labsfilter = (function () {
 
     const initThreeObjects = function () {
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(30, w / h, 1, 5000);
+        camera = new THREE.PerspectiveCamera(30, width / height, 1, 5000);
         camera.position.z = 5;
 
         renderer = new THREE.WebGLRenderer({
@@ -30,7 +31,7 @@ const labsfilter = (function () {
             alpha: true
         });
 
-        renderer.setSize(w, h);
+        renderer.setSize(width, height);
         document.body.appendChild(renderer.domElement);
         renderer.setClearColor(0x000000, 0);
     }
@@ -44,9 +45,10 @@ const labsfilter = (function () {
                     NNCpath = NNCprefix + settings.NNCpath;
                 }
 
-                canvasID = settings.canvasID
-                w = parseFloat(getComputedStyle(settings.video).getPropertyValue('width'));
-                h = parseFloat(getComputedStyle(settings.video).getPropertyValue('height'));
+                width = parseFloat(getComputedStyle(settings.video).getPropertyValue('width'));
+                height = parseFloat(getComputedStyle(settings.video).getPropertyValue('height'));
+                canvas = settings.canvas;
+                rect = video.getBoundingClientRect();
 
                 navigator.mediaDevices.getUserMedia({
                         video: true,
@@ -56,7 +58,7 @@ const labsfilter = (function () {
                         settings.video.srcObject = stream;
                         initThreeObjects();
                         if (texturepath == null || modelpath == null) {
-                            console.error('Invalid texture path or model path');
+                            console.error('There was no texturepath or modelpath include');
                         } else {
                             setFilterModel(texturepath, modelpath);
                         }
@@ -72,38 +74,48 @@ const labsfilter = (function () {
     }
 
     const start = function () {
-        if(!running){
+        if (!running) {
             JEEFACEFILTERAPI.init({
-                canvasId: canvasID,
+                canvasId: canvas.id,
                 NNCpath: NNCpath,
-                callbackReady: function (errCode) {
+                callbackReady: function (errCode, canvasElement) {
                     if (errCode) {
                         console.log(errCode);
                     }
+                    canvas.parentNode.removeChild(canvas);
+                    canvas = document.body.lastChild;
+                    canvas.id = canvasElement.canvasElement.id;
+                    canvas.style.left = rect.left + 'px';
+                    canvas.style.top = rect.top + 'px';
+
+                    window.addEventListener('resize', () => {
+                        rect = video.getBoundingClientRect();
+                        canvas.style.left = rect.left + 'px';
+                        canvas.style.top = rect.top + 'px';
+                    });
                     running = true;
                 },
-    
+
                 callbackTrack: function (detectState) {
-                    if (detectState.detected < 0.8) {
+                    if (detectState.detected < 0.9) {
                         filtermodel.scale.set(0, 0, 0);
                         renderer.render(scene, camera);
                     } else {
                         let s = detectState.s;
                         filtermodel.position.x = detectState.x;
                         filtermodel.position.y = detectState.y - 0.4;
-    
+
                         filtermodel.scale.set(s * scalefactor, s * scalefactor, s * scalefactor);
-    
+
                         filtermodel.rotation.x = detectState.rx;
                         filtermodel.rotation.y = detectState.ry;
                         filtermodel.rotation.z = detectState.rz;
-    
+
                         renderer.render(scene, camera);
                     }
                 }
             });
-        }
-        else{
+        } else {
             console.log('The face detector is already running');
         }
     }
@@ -124,6 +136,9 @@ const labsfilter = (function () {
                 object.children.forEach(mesh => {
                     mesh.material = material;
                 });
+                if (filtermodel != null) {
+                    scene.remove.apply(scene, scene.children);
+                }
                 scene.add(object);
                 filtermodel = object;
             });
