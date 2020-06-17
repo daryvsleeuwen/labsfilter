@@ -1,6 +1,6 @@
 {
   "name": "labsfilter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Library voor 3D gezichtsfilters",
   "main": "index.js",
   "dependencies": {
