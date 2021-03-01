@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "facefilter": "^1.2.7",
-    "three": "^0.117.1"
+    "three": "^0.125.0"
   },
   "devDependencies": {},
   "scripts": {
